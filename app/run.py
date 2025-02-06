@@ -6,6 +6,13 @@ import soundfile as sf
 import numpy as np
 from pydub import AudioSegment
 import io
+import warnings
+
+# Ignore specific warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="torch.nn.modules.rnn")
+warnings.filterwarnings(
+    "ignore", category=FutureWarning, module="torch.nn.utils.weight_norm"
+)
 
 
 def process_text_file(file_path: str) -> str:
@@ -38,11 +45,11 @@ def generate_audio(text: str, output_folder: str, output_filename: str) -> None:
     audio_segment: AudioSegment = AudioSegment.from_wav(wav_io)
     audio_segment.export(output_path + ".mp3", format="mp3", bitrate="64k")
 
-    print(f"Audio saved to: {output_path}.mp3!")
+    print(f"### Audio saved to: {output_path}.mp3! ###")
 
 
 def main() -> None:
-    parser: argparse.ArgumentParser = argparse.ArguruffmentParser(
+    parser: argparse.ArgumentParser = argparse.ArgumentParser(
         description="Generate audio from text file using Kokoro-TTS"
     )
     parser.add_argument("--input", "-i", help="Path to the input text file")
