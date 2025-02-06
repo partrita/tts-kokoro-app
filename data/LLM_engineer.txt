@@ -1,0 +1,63 @@
+Welcome to this comprehensive guide on becoming an LLM engineer. This course is divided into three main parts: LLM Fundamentals, The LLM Scientist, and The LLM Engineer.
+Let's start with the LLM Scientist section. This part focuses on building the best possible Large Language Models using the latest techniques.
+First, we'll dive into the LLM architecture. While an in-depth knowledge of the Transformer architecture isn't required, it's crucial to understand the main steps of modern LLMs. This includes tokenization, processing tokens through layers with attention mechanisms, and generating new text through various sampling strategies.
+Next, we'll explore pre-training models. Although pre-training is computationally intensive and expensive, it's important to understand how models are pre-trained, especially in terms of data and parameters.
+Post-training datasets are another critical component. These datasets have a precise structure with instructions and answers for supervised fine-tuning or instructions and chosen/rejected answers for preference alignment.
+Moving on to supervised fine-tuning, we'll learn how to turn base models into helpful assistants capable of answering questions and following instructions.
+Preference alignment is the next stage, focusing on aligning generated answers with human preferences. We'll cover techniques like Direct Preference Optimization and Proximal Policy Optimization.
+Evaluation is a complex but essential task that guides data generation and training. We'll discuss various evaluation methods, including automated benchmarks, human evaluation, and model-based evaluation.
+Quantization is another crucial topic. It's the process of converting the parameters and activations of a model using lower precision, which has become increasingly important to reduce computational and memory costs associated with LLMs.
+Lastly, we'll touch on new trends in the field, such as model merging, multimodal models, interpretability, and test-time compute scaling.
+Moving on to the LLM Engineer section, we'll focus on building LLM-powered applications that can be used in production, with an emphasis on augmenting models and deploying them.
+We'll start by discussing how to run LLMs, including using LLM APIs and open-source models. We'll also cover prompt engineering and structuring outputs.
+Next, we'll learn about building a vector storage, which is the first step in creating a Retrieval Augmented Generation (RAG) pipeline.
+We'll then dive into Retrieval Augmented Generation itself, exploring how LLMs can retrieve contextual documents from a database to improve the accuracy of their answers.
+Advanced RAG techniques will also be covered, including query construction, agents and tools, and post-processing.
+Inference optimization is another crucial topic. We'll discuss techniques like Flash Attention, key-value cache, and speculative decoding to maximize throughput and reduce inference costs.
+We'll then move on to deploying LLMs, covering local deployment, demo deployment, server deployment, and edge deployment.
+Finally, we'll discuss securing LLMs, including prompt hacking, backdoors, and defensive measures.
+This course provides a comprehensive roadmap for becoming an LLM engineer, covering both the scientific and engineering aspects of working with Large Language Models. Good luck on your learning journey!"
+
+1. Running LLMs
+Running LLMs can be difficult due to high hardware requirements. Depending on your use case, you might want to simply consume a model through an API (like GPT-4) or run it locally. In any case, additional prompting and guidance techniques can improve and constrain the output for your applications.
+LLM APIs: APIs are a convenient way to deploy LLMs. This space is divided between private LLMs (OpenAI, Google, Anthropic, Cohere, etc.) and open-source LLMs (OpenRouter, Hugging Face, Together AI, etc.).
+Open-source LLMs: The Hugging Face Hub is a great place to find LLMs. You can directly run some of them in Hugging Face Spaces, or download and run them locally in apps like LM Studio or through the CLI with llama.cpp or Ollama.
+Prompt engineering: Common techniques include zero-shot prompting, few-shot prompting, chain of thought, and ReAct. They work better with bigger models, but can be adapted to smaller ones.
+Structuring outputs: Many tasks require a structured output, like a strict template or a JSON format. Libraries like LMQL, Outlines, Guidance, etc. can be used to guide the generation and respect a given structure.
+2. Building a Vector Storage
+Creating a vector storage is the first step to building a Retrieval Augmented Generation (RAG) pipeline. Documents are loaded, split, and relevant chunks are used to produce vector representations (embeddings) that are stored for future use during inference.
+Ingesting documents: Document loaders can handle many formats: PDF, JSON, HTML, Markdown, etc. They can also directly retrieve data from some databases and APIs.
+Splitting documents: Text splitters break down documents into smaller, semantically meaningful chunks. It's often better to split by header or recursively, with some additional metadata.
+Embedding models: These convert text into vector representations, allowing for a deeper understanding of language, which is essential for semantic search.
+Vector databases: Databases like Chroma, Pinecone, Milvus, FAISS, Annoy, etc. are designed to store embedding vectors and enable efficient retrieval of similar data.
+3. Retrieval Augmented Generation
+With RAG, LLMs retrieve contextual documents from a database to improve the accuracy of their answers. RAG is a popular way of augmenting the model's knowledge without any fine-tuning.
+Orchestrators: Frameworks like LangChain, LlamaIndex, FastRAG, etc. connect LLMs with tools, databases, memories, etc. to augment their abilities.
+Retrievers: Different techniques (e.g., multi-query retriever, HyDE, etc.) can be applied to rephrase/expand user instructions and improve performance.
+Memory: LLMs and chatbots can remember previous instructions and answers by adding history to their context window. This can be improved with summarization or vector store + RAG.
+Evaluation: Both document retrieval and generation stages need evaluation. Tools like Ragas and DeepEval can simplify this process.
+4. Advanced RAG
+Real-life applications can require complex pipelines, including SQL or graph databases, as well as automatically selecting relevant tools and APIs. These advanced techniques can improve a baseline solution and provide additional features.
+Query construction: Structured data in traditional databases requires specific query languages. We can directly translate user instructions into queries to access the data.
+Agents and tools: Agents augment LLMs by automatically selecting the most relevant tools to provide an answer, from simple Google searches to complex Python interpreters or Jira integrations.
+Post-processing: This final step enhances the relevance and diversity of retrieved documents with techniques like re-ranking, RAG-fusion, and classification.
+Program LLMs: Frameworks like DSPy allow you to optimize prompts and weights based on automated evaluations in a programmatic way.
+5. Inference optimization
+Text generation is a costly process that requires expensive hardware. In addition to quantization, various techniques have been proposed to maximize throughput and reduce inference costs.
+Flash Attention: Optimization of the attention mechanism to transform its complexity from quadratic to linear, speeding up both training and inference.
+Key-value cache: Understand the key-value cache and the improvements introduced in Multi-Query Attention (MQA) and Grouped-Query Attention (GQA).
+Speculative decoding: Use a small model to produce drafts that are then reviewed by a larger model to speed up text generation.
+References for this section include Hugging Face's guide on GPU inference, Databricks' best practices for LLM inference in production, and Hugging Face's tutorial on optimizing LLMs for speed and memory.
+6. Deploying LLMs
+Deploying LLMs at scale can require multiple GPU clusters, but demos and local apps can be achieved with lower complexity.
+Local deployment: Privacy-focused open-source LLMs can be deployed locally using tools like LM Studio, Ollama, and oobabooga.
+Demo deployment: Frameworks like Gradio and Streamlit help prototype applications and share demos, which can be hosted on platforms like Hugging Face Spaces.
+Server deployment: Scaling LLMs requires cloud or on-premise infrastructure, often using optimized frameworks like TGI and vLLM.
+Edge deployment: For constrained environments, frameworks like MLC LLM and mnn-llm can deploy LLMs in web browsers, Android, and iOS.
+Resources for this topic include Streamlit's tutorial on building a basic LLM app and Philipp Schmid's blog with articles on LLM deployment using Amazon SageMaker.
+7. Securing LLMs
+LLMs have unique security vulnerabilities due to their training and prompting methods:
+Prompt hacking: Techniques like prompt injection, data/prompt leaking, and jailbreaking can manipulate model outputs.
+Backdoors: Attacks can target training data, including data poisoning and creating secret triggers to alter model behavior.
+Defensive measures: Best practices include testing against vulnerabilities (e.g., using red teaming and tools like garak) and monitoring in production (with frameworks like langfuse).
+Key resources include the OWASP LLM Top 10 vulnerabilities list and Microsoft's guide on red teaming LLMs.
