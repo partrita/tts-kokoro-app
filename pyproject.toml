@@ -1,0 +1,16 @@
+[project]
+name = "tts-kokoro-app"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "kokoro>=0.7.9",
+    "pip>=25.0",
+    "soundfile>=0.13.1",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+]

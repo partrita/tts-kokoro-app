@@ -169,3 +169,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+.venv/
+.env
+.DS_Store
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
