@@ -19,9 +19,12 @@ uv sync
 brew install ffmpeg # for mp3 file
 ```
 
-
 ### Run python script
 
 ```bash
 uv run app/run.py -n welcome -i data/welcome.txt -o data/
 ```
+
+### Make text files
+
+[docling](https://github.com/DS4SD/docling) simplifies document processing, parsing diverse formats — including advanced PDF understanding — and providing seamless integrations with the gen AI ecosystem.
