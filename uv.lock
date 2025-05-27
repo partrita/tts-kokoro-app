@@ -1,4 +1,5 @@
 version = 1
+revision = 1
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version >= '3.12' and platform_machine == 'x86_64' and sys_platform == 'darwin'",
@@ -856,7 +857,7 @@ wheels = [
 
 [[package]]
 name = "kokoro"
-version = "0.7.9"
+version = "0.7.16"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "huggingface-hub" },
@@ -868,9 +869,9 @@ dependencies = [
     { name = "transformers", version = "4.42.4", source = { registry = "https://pypi.org/simple" }, marker = "platform_machine == 'x86_64' and sys_platform == 'darwin'" },
     { name = "transformers", version = "4.48.2", source = { registry = "https://pypi.org/simple" }, marker = "platform_machine != 'x86_64' or sys_platform != 'darwin'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a4/1c/28fe47c0a13210e7a05b9a37aa855db1cb06323ae84e7f991c27c9999ca4/kokoro-0.7.9.tar.gz", hash = "sha256:62b32422b8985303d7c0e30a2465945ac896a1070d01e4cd5bd8f95f9bd4c73f", size = 24800 }
+sdist = { url = "https://files.pythonhosted.org/packages/22/71/337f2a466396fb1534c19fd36faabf597204b6d4c22ee01afcab14ca0ac3/kokoro-0.7.16.tar.gz", hash = "sha256:c1cf957cfff76cbb6702f16a3cd15eea2a30c561f2c3b6b42107e39e6456316e", size = 24878 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/33/36/685a23559ff18388ac84f3b8e1c1d5094cca1759d2f676e57db56df5578e/kokoro-0.7.9-py3-none-any.whl", hash = "sha256:de2f4826daaca48da3b9d63d232e47db35047548029d0aae30c40aee3af90b5d", size = 25590 },
+    { url = "https://files.pythonhosted.org/packages/37/28/3b2e2f2d359005e2b3f75920d80790bcdac60a8777a8fd9e1957d50a49e6/kokoro-0.7.16-py3-none-any.whl", hash = "sha256:27d8e8cfd6ec4fdad5caacb5e3fabd7b2576b778226c8cd0f92e1c33ff14f553", size = 25707 },
 ]
 
 [[package]]
@@ -1144,14 +1145,14 @@ wheels = [
 
 [[package]]
 name = "misaki"
-version = "0.7.9"
+version = "0.7.17"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "regex" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/fe/03/0bd328b423501094097578f254f58d5fc0fdc489f6e9be930c90f2a0ebef/misaki-0.7.9.tar.gz", hash = "sha256:03c45dd3f1ddc36f681892ff773b943c8c8e30d200e5a097d42178efe2d1e487", size = 3662856 }
+sdist = { url = "https://files.pythonhosted.org/packages/0c/f4/fccf89486f15d8963679b2a2bb651ca964530158817518498ad09aa2e452/misaki-0.7.17.tar.gz", hash = "sha256:301ea5ee3bd6dfcf5539bbd55c928a1855cf1bf6a90a367362072348a0e4a16a", size = 3663816 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d3/16/0dd670d00854309414acbbfad3441fa35410d7efdac4bbed133d7472cd66/misaki-0.7.9-py3-none-any.whl", hash = "sha256:66f78388c64d63495a4b700b9ebf19c8a75492da099fce409569fc1ef6023c5d", size = 3516509 },
+    { url = "https://files.pythonhosted.org/packages/69/63/ff088c8dfddf2cd68b5248405b6865d571b6aa2192caf765d19602eea279/misaki-0.7.17-py3-none-any.whl", hash = "sha256:5c739a540e715c368f9dbcf3e99f814575853785d5ba0096956acabcf58be0cd", size = 3517392 },
 ]
 
 [package.optional-dependencies]
