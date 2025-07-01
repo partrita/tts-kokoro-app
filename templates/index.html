@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text-to-Speech Web App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Text-to-Speech</h1>
+
+        <h2>Text:</h2>
+        <pre id="textContent">{{ text_content }}</pre>
+
+        <button id="generateBtn">Generate Audio</button>
+
+        <h2>Generated Audio:</h2>
+        <audio id="audioPlayer" controls></audio>
+
+        <div id="statusMessage"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const generateBtn = document.getElementById('generateBtn');
+            const audioPlayer = document.getElementById('audioPlayer');
+            const statusMessage = document.getElementById('statusMessage');
+
+            // Function to set status message and class
+            function setStatus(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = 'statusMessage'; // Reset classes
+                if (type) {
+                    statusMessage.classList.add(`status-${type}`);
+                }
+            }
+
+            if (generateBtn) {
+                generateBtn.addEventListener('click', () => {
+                    setStatus('Generating audio, please wait...', 'info');
+                    generateBtn.disabled = true;
+
+                    fetch('/generate-audio', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                            // No body needed for this request as the server uses a fixed file
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            // Try to get error message from server if available
+                            return response.json().then(errData => {
+                                throw new Error(errData.error || `Server error: ${response.status}`);
+                            }).catch(() => {
+                                // Fallback if response.json() fails or no specific error message
+                                throw new Error(`Server error: ${response.status}`);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.audio_path) {
+                            audioPlayer.src = data.audio_path;
+                            audioPlayer.load();
+                            // audioPlayer.play(); // Optional: uncomment to play automatically
+                            setStatus('Audio generated successfully. Press play.', 'success');
+                        } else if (data.error) {
+                            setStatus(`Error: ${data.error}`, 'error');
+                        } else {
+                            setStatus('Error: Invalid response from server.', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                        setStatus(`Error generating audio: ${error.message}. Please try again.`, 'error');
+                    })
+                    .finally(() => {
+                        generateBtn.disabled = false;
+                    });
+                });
+            } else {
+                console.error("Generate button not found.");
+                if(statusMessage) setStatus("Initialization error: Generate button missing.", "error");
+            }
+        });
+    </script>
+</body>
+</html>
