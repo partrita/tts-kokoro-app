@@ -21,7 +21,7 @@ def process_text_file(file_path: str) -> str:
     return text
 
 
-def generate_audio(text: str, output_folder: str, output_filename: str) -> None:
+def generate_audio(text: str, output_filename_no_ext: str) -> str:
     pipeline: KPipeline = KPipeline(lang_code="a")
     generator = pipeline(text, voice="af_heart", speed=1, split_pattern=r"\n+")
 
@@ -33,8 +33,15 @@ def generate_audio(text: str, output_folder: str, output_filename: str) -> None:
     # Concatenate all audio segments
     combined_audio: np.ndarray = np.concatenate(all_audio)
 
-    # Construct the full output path
-    output_path: str = os.path.join(output_folder, output_filename)
+    # Construct the full output path, ensuring it's in the static directory
+    # Assuming run.py is in app/, so static/ is at ../static/
+    output_folder: str = os.path.join("..", "static")
+    # Ensure the static directory exists, create if not (though ideally it should exist)
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    output_filename_with_ext: str = output_filename_no_ext + ".mp3"
+    output_path: str = os.path.join(output_folder, output_filename_with_ext)
 
     # Save the combined audio to a temporary WAV file in memory
     wav_io: io.BytesIO = io.BytesIO()
@@ -43,9 +50,10 @@ def generate_audio(text: str, output_folder: str, output_filename: str) -> None:
 
     # Convert WAV to MP3
     audio_segment: AudioSegment = AudioSegment.from_wav(wav_io)
-    audio_segment.export(output_path + ".mp3", format="mp3", bitrate="64k")
+    audio_segment.export(output_path, format="mp3", bitrate="64k")
 
-    print(f"### Audio saved to: {output_path}.mp3! ###")
+    # Return the relative path for web serving
+    return os.path.join("static", output_filename_with_ext)
 
 
 def main() -> None:
