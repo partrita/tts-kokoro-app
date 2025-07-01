@@ -84,3 +84,4 @@ This command will:
 - Save it in the `data/` directory.
 
 The `generate_audio` function within `app/run.py` is now configured to save audio into the `static/` directory when called by the web application. If using `app/run.py` directly as a script, its `main()` function still uses the command-line arguments for output paths.
+
