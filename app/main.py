@@ -33,6 +33,7 @@ def trigger_audio_generation():
         text_content = data.get('text')
         voice = data.get('voice', 'af_heart')
         speed = float(data.get('speed', 1.0))
+        model_type = data.get('model_type', 'kokoro')
 
         if not text_content:
             if os.path.exists(DEFAULT_TEXT_FILE):
@@ -41,7 +42,7 @@ def trigger_audio_generation():
                 return jsonify({"error": "No text provided and default file missing."}), 400
 
         # Create a unique filename if needed, or stick to a fixed one for simplicity
-        audio_file_path = generate_audio(text_content, "tts_output", voice=voice, speed=speed)
+        audio_file_path = generate_audio(text_content, "tts_output", voice=voice, speed=speed, model_type=model_type)
         return jsonify({"audio_path": audio_file_path})
     except Exception as e:
         print(f"Error during audio generation: {e}")

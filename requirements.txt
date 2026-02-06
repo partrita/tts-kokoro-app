@@ -3,3 +3,5 @@ kokoro>=0.7.9
 soundfile>=0.13.1
 numpy>=1.20
 pydub>=0.25.1
+voxcpm>=0.1.0
+huggingface_hub

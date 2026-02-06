@@ -1,14 +1,15 @@
 # tts-kokoro-app
 
-local app for Kokoro TTS.
+Local app for Kokoro TTS and VoxCPM.
 
-## What is that?
+## Supported Models
 
-[Kokoro](https://huggingface.co/hexgrad/Kokoro-82M) is an open-weight TTS model with 82 million parameters. Despite its lightweight architecture, it delivers comparable quality to larger models while being significantly faster and more cost-efficient. With Apache-licensed weights, Kokoro can be deployed anywhere from production environments to personal projects.
+- **[Kokoro](https://huggingface.co/hexgrad/Kokoro-82M)**: A lightweight, open-weight TTS model with 82 million parameters. It delivers high quality while being incredibly fast and resource-efficient.
+- **[VoxCPM](https://github.com/OpenBMB/VoxCPM)**: A tokenizer-free, continuous-space TTS system built on the MiniCPM-4 backbone. It excels at expressive speech generation and zero-shot voice cloning.
 
 ## Web Application Usage
 
-This project provides a web application interface for Text-to-Speech (TTS) generation using the Kokoro model. The application allows you to easily convert text content into audible speech directly in your browser.
+This project provides a web application interface for Text-to-Speech (TTS) generation using both Kokoro and VoxCPM models. The application allows you to easily convert text content into audible speech directly in your browser.
 
 ## Setup Instructions
 
@@ -44,8 +45,10 @@ This project provides a web application interface for Text-to-Speech (TTS) gener
 
 1.  Open your web browser and navigate to the address shown when you started the server (e.g., `http://127.0.0.1:5001/`).
 2.  The text content from the file `data/LLM_engineer.txt` will be displayed on the page.
-3.  Click the "Generate Audio" button. This will trigger the TTS conversion process for the displayed text.
-4.  Once the audio is generated, it can be played using the audio player element that appears on the page. The status message will indicate when generation is complete.
+3.  Select the desired model (Kokoro or VoxCPM).
+4.  For Kokoro, you can also select the voice and speed.
+5.  Click the "Generate Audio" button. This will trigger the TTS conversion process for the displayed text.
+6.  Once the audio is generated, it can be played using the audio player element that appears on the page. The status message will indicate when generation is complete.
 
 ## Legacy Command-Line Usage
 
@@ -64,7 +67,11 @@ Ensure you have cloned the repository and have `ffmpeg` installed as described i
 
 The `app/run.py` script can be used to generate audio directly:
 ```bash
-python app/run.py -n welcome -i data/welcome.txt -o data/
+python app/run.py -n welcome -i data/welcome.txt -o data/ -m kokoro
+```
+Or using VoxCPM:
+```bash
+python app/run.py -n welcome_vox -i data/welcome.txt -o data/ -m voxcpm
 ```
 This command will:
 - Take text from `data/welcome.txt`.

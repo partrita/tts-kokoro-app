@@ -25,6 +25,16 @@
 
             <div class="controls">
                 <div class="control-item">
+                    <label for="model-select">Model</label>
+                    <select id="model-select">
+                        <option value="kokoro" selected>Kokoro (Efficient)</option>
+                        <option value="voxcpm">VoxCPM (High Fidelity / Cloning)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="controls" id="kokoro-controls">
+                <div class="control-item">
                     <label for="voice-select">Voice</label>
                     <select id="voice-select">
                         <option value="af_heart">af_heart (Bella)</option>
@@ -82,6 +92,8 @@
     <script>
         $(function () {
             const $text = $('#tts-text');
+            const $model = $('#model-select');
+            const $kokoroControls = $('#kokoro-controls');
             const $voice = $('#voice-select');
             const $speed = $('#speed-range');
             const $speedVal = $('#speed-val');
@@ -97,8 +109,17 @@
                 $speedVal.text($(this).val());
             });
 
+            $model.on('change', function () {
+                if ($(this).val() === 'voxcpm') {
+                    $kokoroControls.addClass('hidden');
+                } else {
+                    $kokoroControls.removeClass('hidden');
+                }
+            });
+
             $genBtn.on('click', function () {
                 const text = $text.val();
+                const model = $model.val();
                 const voice = $voice.val();
                 const speed = $speed.val();
 
@@ -118,6 +139,7 @@
                     contentType: 'application/json',
                     data: JSON.stringify({
                         text: text,
+                        model_type: model,
                         voice: voice,
                         speed: speed
                     }),

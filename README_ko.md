@@ -1,10 +1,11 @@
 # tts-kokoro-app
 
-Kokoro TTS용 로컬 애플리케이션입니다.
+Kokoro TTS 및 VoxCPM을 위한 로컬 애플리케이션입니다.
 
-## Kokoro TTS란?
+## 지원 모델
 
-[Kokoro](https://huggingface.co/hexgrad/Kokoro-82M)는 8,200만 개의 파라미터를 가진 오픈 웨이트 TTS 모델입니다. 가벼운 아키텍처임에도 불구하고 대형 모델에 필적하는 품질을 제공하며, 훨씬 빠르고 비용 효율적입니다. Apache 라이선스가 적용된 가중치를 통해 프로덕션 환경부터 개인 프로젝트까지 어디에서나 배포할 수 있습니다.
+- **[Kokoro](https://huggingface.co/hexgrad/Kokoro-82M)**: 8,200만 개의 파라미터를 가진 오픈 웨이트 TTS 모델입니다. 매우 빠르고 리소스 효율적이면서도 고품질 음성을 생성합니다.
+- **[VoxCPM](https://github.com/OpenBMB/VoxCPM)**: MiniCPM-4를 기반으로 한 토크나이저리스(tokenizer-free) TTS 시스템입니다. 풍부한 감정 표현과 3초 분량의 오디오만으로 가능한 제로샷 보이스 클로닝에 강점이 있습니다.
 
 ## 웹 애플리케이션 주요 기능
 
