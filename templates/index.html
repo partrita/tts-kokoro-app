@@ -1,89 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Text-to-Speech Web App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kokoro TTS - Premium Web App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+
 <body>
     <div class="container">
-        <h1>Text-to-Speech</h1>
+        <header>
+            <h1>Kokoro TTS</h1>
+            <p>Experience the power of lightweight, high-quality speech synthesis.</p>
+        </header>
 
-        <h2>Text:</h2>
-        <pre id="textContent">{{ text_content }}</pre>
+        <main>
+            <div class="input-group">
+                <label for="tts-text">Input Text</label>
+                <textarea id="tts-text" placeholder="Enter text to speak...">{{ text_content }}</textarea>
+            </div>
 
-        <button id="generateBtn">Generate Audio</button>
+            <div class="controls">
+                <div class="control-item">
+                    <label for="voice-select">Voice</label>
+                    <select id="voice-select">
+                        <option value="af_heart">af_heart (Bella)</option>
+                        <option value="af_alloy">af_alloy (Sarah)</option>
+                        <option value="af_aoede">af_aoede (Aoede)</option>
+                        <option value="af_bella">af_bella (Bella)</option>
+                        <option value="af_jessica">af_jessica (Jessica)</option>
+                        <option value="af_kore">af_kore (Kore)</option>
+                        <option value="af_nicole">af_nicole (Nicole)</option>
+                        <option value="af_nova">af_nova (Nova)</option>
+                        <option value="af_river">af_river (River)</option>
+                        <option value="af_sky">af_sky (Sky)</option>
+                        <option value="am_adam">am_adam (Adam)</option>
+                        <option value="am_echo">am_echo (Echo)</option>
+                        <option value="am_eric">am_eric (Eric)</option>
+                        <option value="am_fenix">am_fenix (Fenix)</option>
+                        <option value="am_liam">am_liam (Liam)</option>
+                        <option value="am_michael">am_michael (Michael)</option>
+                        <option value="am_onyx">am_onyx (Onyx)</option>
+                        <option value="am_puck">am_puck (Puck)</option>
+                        <option value="am_santa">am_santa (Santa)</option>
+                        <option value="am_shimmer">am_shimmer (Shimmer)</option>
+                        <option value="bf_alice">bf_alice (Alice - British)</option>
+                        <option value="bf_emma">bf_emma (Emma - British)</option>
+                        <option value="bf_isabella">bf_isabella (Isabella - British)</option>
+                        <option value="bf_lily">bf_lily (Lily - British)</option>
+                        <option value="bm_daniel">bm_daniel (Daniel - British)</option>
+                        <option value="bm_fable">bm_fable (Fable - British)</option>
+                        <option value="bm_george">bm_george (George - British)</option>
+                        <option value="bm_lewis">bm_lewis (Lewis - British)</option>
+                    </select>
+                </div>
+                <div class="control-item">
+                    <label for="speed-range">Speed: <span id="speed-val">1.0</span>x</label>
+                    <input type="range" id="speed-range" min="0.5" max="2.0" step="0.1" value="1.0">
+                </div>
+            </div>
 
-        <h2>Generated Audio:</h2>
-        <audio id="audioPlayer" controls></audio>
+            <button id="generate-btn" class="generate-btn">
+                <span id="btn-text">Generate Audio</span>
+                <div id="btn-spinner" class="spinner hidden"></div>
+            </button>
 
-        <div id="statusMessage"></div>
+            <div id="player-container" class="audio-player-container hidden">
+                <audio id="audio-player" controls>
+                    <source id="audio-source" src="" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+
+            <div id="status" class="status-msg">Ready</div>
+        </main>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const generateBtn = document.getElementById('generateBtn');
-            const audioPlayer = document.getElementById('audioPlayer');
-            const statusMessage = document.getElementById('statusMessage');
+        $(function () {
+            const $text = $('#tts-text');
+            const $voice = $('#voice-select');
+            const $speed = $('#speed-range');
+            const $speedVal = $('#speed-val');
+            const $genBtn = $('#generate-btn');
+            const $spinner = $('#btn-spinner');
+            const $btnText = $('#btn-text');
+            const $playerContainer = $('#player-container');
+            const $player = $('#audio-player');
+            const $source = $('#audio-source');
+            const $status = $('#status');
 
-            // Function to set status message and class
-            function setStatus(message, type) {
-                statusMessage.textContent = message;
-                statusMessage.className = 'statusMessage'; // Reset classes
-                if (type) {
-                    statusMessage.classList.add(`status-${type}`);
+            $speed.on('input', function () {
+                $speedVal.text($(this).val());
+            });
+
+            $genBtn.on('click', function () {
+                const text = $text.val();
+                const voice = $voice.val();
+                const speed = $speed.val();
+
+                if (!text) {
+                    $status.text("Please enter some text!");
+                    return;
                 }
-            }
 
-            if (generateBtn) {
-                generateBtn.addEventListener('click', () => {
-                    setStatus('Generating audio, please wait...', 'info');
-                    generateBtn.disabled = true;
+                $genBtn.prop('disabled', true);
+                $spinner.removeClass('hidden');
+                $btnText.text('Generating...');
+                $status.text("Initializing model and generating audio...");
 
-                    fetch('/generate-audio', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                            // No body needed for this request as the server uses a fixed file
+                $.ajax({
+                    type: 'POST',
+                    url: '/generate-audio',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        text: text,
+                        voice: voice,
+                        speed: speed
+                    }),
+                    success: function (response) {
+                        if (response.audio_path) {
+                            $source.attr('src', '/' + response.audio_path + '?t=' + new Date().getTime());
+                            $player[0].load();
+                            $playerContainer.removeClass('hidden');
+                            $status.text("Generation complete!");
+                        } else if (response.error) {
+                            $status.text("Error: " + response.error);
                         }
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            // Try to get error message from server if available
-                            return response.json().then(errData => {
-                                throw new Error(errData.error || `Server error: ${response.status}`);
-                            }).catch(() => {
-                                // Fallback if response.json() fails or no specific error message
-                                throw new Error(`Server error: ${response.status}`);
-                            });
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.audio_path) {
-                            audioPlayer.src = data.audio_path;
-                            audioPlayer.load();
-                            // audioPlayer.play(); // Optional: uncomment to play automatically
-                            setStatus('Audio generated successfully. Press play.', 'success');
-                        } else if (data.error) {
-                            setStatus(`Error: ${data.error}`, 'error');
-                        } else {
-                            setStatus('Error: Invalid response from server.', 'error');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Fetch error:', error);
-                        setStatus(`Error generating audio: ${error.message}. Please try again.`, 'error');
-                    })
-                    .finally(() => {
-                        generateBtn.disabled = false;
-                    });
+                    },
+                    error: function (xhr) {
+                        const err = xhr.responseJSON ? xhr.responseJSON.error : "Unknown error";
+                        $status.text("Failed to generate audio: " + err);
+                    },
+                    complete: function () {
+                        $genBtn.prop('disabled', false);
+                        $spinner.addClass('hidden');
+                        $btnText.text('Generate Audio');
+                    }
                 });
-            } else {
-                console.error("Generate button not found.");
-                if(statusMessage) setStatus("Initialization error: Generate button missing.", "error");
-            }
+            });
         });
     </script>
 </body>
+
 </html>

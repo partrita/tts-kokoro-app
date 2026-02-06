@@ -12,43 +12,31 @@ This project provides a web application interface for Text-to-Speech (TTS) gener
 
 ## Setup Instructions
 
-1.  **Prerequisites**:
-    *   Python 3.x (e.g., Python 3.11 or newer is recommended).
-    *   `ffmpeg` must be installed on your system for audio processing (MP3 export).
+1.  Prerequisites:
+    *   `uv`: A fast Python package manager and resolver. [Install uv](https://github.com/astral-sh/uv).
+    *   `ffmpeg`: Must be installed on your system for audio processing (MP3 export).
         *   On macOS: `brew install ffmpeg`
         *   On Debian/Ubuntu: `sudo apt-get install ffmpeg`
         *   On other systems: Use your respective package manager.
 
-2.  **Clone the Repository**:
+2.  Clone the Repository:
     ```bash
     gh repo clone partrita/tts-kokoro-app
     cd tts-kokoro-app
     ```
 
-3.  **Create and Activate a Virtual Environment** (Recommended):
+3.  Sync Dependencies (Automatic Venv Creation):
     ```bash
-    python -m venv .venv
+    uv sync
     ```
-    *   On macOS/Linux:
-        ```bash
-        source .venv/bin/activate
-        ```
-    *   On Windows:
-        ```bash
-        .venv\Scripts\activate
-        ```
 
-4.  **Install Dependencies**:
-    ```bash
-    pip install -r requirements.txt
-    ```
-    **Important Note on Disk Space**: The `kokoro` TTS library has dependencies (like PyTorch for its neural network capabilities) that can be very large. During testing in some environments, "No space left on device" errors were encountered during the installation of these large packages. Ensure you have sufficient disk space available (several GB might be needed for PyTorch and its associated components, especially if CUDA libraries are included by default).
+**Important Note on Disk Space**: The `kokoro` TTS library has dependencies (like PyTorch) that can be very large. Ensure you have sufficient disk space available (several GB).
 
 ## Running the Application
 
-1.  **Start the Flask Web Server**:
+1.  Start the Flask Web Server using uv:
     ```bash
-    python app/main.py
+    uv run python -m app.main
     ```
 2.  The server will typically start and be accessible at `http://127.0.0.1:5001/` or `http://0.0.0.0:5001/`. Check the output in your terminal for the exact address.
 

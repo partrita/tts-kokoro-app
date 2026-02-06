@@ -2,50 +2,52 @@ import os
 from flask import Flask, render_template, jsonify, request
 from .run import process_text_file, generate_audio
 
-app = Flask(__name__, template_folder='../templates', static_folder='../static')
+# Use absolute paths for templates and static
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+template_dir = os.path.join(base_dir, 'templates')
+static_dir = os.path.join(base_dir, 'static')
 
-# Define the path to the data directory relative to this script (app/main.py)
-# ../data will go up one level from 'app' to the project root, then into 'data'
-DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
-TEXT_FILE_PATH = os.path.join(DATA_DIR, "LLM_engineer.txt")
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
+
+DATA_DIR = os.path.join(base_dir, "data")
+DEFAULT_TEXT_FILE = os.path.join(DATA_DIR, "LLM_engineer.txt")
 
 @app.route('/', methods=['GET'])
 def index():
-    """
-    Renders the main page with text content.
-    """
+    """Renders the main page."""
     try:
-        file_content = process_text_file(TEXT_FILE_PATH)
-    except FileNotFoundError:
-        # Fallback or error handling if the primary file is not found
-        # For now, let's provide a default text and log an error or message
-        print(f"Error: Text file not found at {TEXT_FILE_PATH}. Using default text.")
-        file_content = "The specified text file was not found. Please check the path."
-    return render_template('index.html', text_content=file_content)
+        default_content = ""
+        if os.path.exists(DEFAULT_TEXT_FILE):
+            default_content = process_text_file(DEFAULT_TEXT_FILE)
+    except Exception as e:
+        print(f"Error reading default file: {e}")
+        default_content = "Welcome! Type your text here to generate speech."
+    
+    return render_template('index.html', text_content=default_content)
 
 @app.route('/generate-audio', methods=['POST'])
 def trigger_audio_generation():
-    """
-    Generates audio from the text file and returns the path to the audio file.
-    """
+    """Generates audio from text (either default or user-provided)."""
     try:
-        text_content = process_text_file(TEXT_FILE_PATH)
-        # The output filename "llm_guide_audio" will have ".mp3" appended by generate_audio
-        # and will be saved in the "static" directory.
-        audio_file_path = generate_audio(text_content, "llm_guide_audio")
+        data = request.get_json() or {}
+        text_content = data.get('text')
+        voice = data.get('voice', 'af_heart')
+        speed = float(data.get('speed', 1.0))
+
+        if not text_content:
+            if os.path.exists(DEFAULT_TEXT_FILE):
+                text_content = process_text_file(DEFAULT_TEXT_FILE)
+            else:
+                return jsonify({"error": "No text provided and default file missing."}), 400
+
+        # Create a unique filename if needed, or stick to a fixed one for simplicity
+        audio_file_path = generate_audio(text_content, "tts_output", voice=voice, speed=speed)
         return jsonify({"audio_path": audio_file_path})
-    except FileNotFoundError:
-        return jsonify({"error": f"Text file not found at {TEXT_FILE_PATH}"}), 404
     except Exception as e:
-        # Log the exception for debugging
         print(f"Error during audio generation: {e}")
-        return jsonify({"error": "Failed to generate audio"}), 500
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    # Make sure the static directory exists, as generate_audio might need it
-    static_dir_path = os.path.join(os.path.dirname(__file__), "..", "static")
-    if not os.path.exists(static_dir_path):
-        os.makedirs(static_dir_path)
-        print(f"Created static directory at {static_dir_path}")
-
+    if not os.path.exists(static_dir):
+        os.makedirs(static_dir)
     app.run(debug=True, host='0.0.0.0', port=5001)
